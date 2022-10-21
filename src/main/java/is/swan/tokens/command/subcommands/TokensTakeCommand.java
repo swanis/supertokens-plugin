@@ -1,0 +1,65 @@
+package is.swan.tokens.command.subcommands;
+
+import is.swan.tokens.Configuration;
+import is.swan.tokens.Tokens;
+import is.swan.tokens.profile.Profile;
+import is.swan.tokens.utils.command.Command;
+import is.swan.tokens.utils.command.PluginCommand;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class TokensTakeCommand extends PluginCommand {
+
+    private Tokens instance;
+
+    public TokensTakeCommand(Tokens instance) {
+        super(instance);
+        this.instance = instance;
+    }
+
+    @Command(command = "take", permission = "tokens.take", subCommand = true, baseCommand = "tokens")
+    public void onCommand(CommandSender commandSender, String[] args) {
+        if(args.length < 3) {
+            commandSender.sendMessage(Configuration.USAGE_MESSAGE.replace("%usage%", "/tokens take <player> <amount>"));
+            return;
+        }
+
+        if(instance.getServer().getPlayerExact(args[1]) == null) {
+            commandSender.sendMessage(Configuration.PLAYER_NOT_FOUND_MESSAGE.replace("%player%", args[1]));
+            return;
+        }
+
+        Player target = instance.getServer().getPlayerExact(args[1]);
+        Profile profile = instance.getProfileManager().getProfile(target.getUniqueId());
+
+        if(profile == null) {
+            commandSender.sendMessage(Configuration.PROFILE_NOT_FOUND_MESSAGE.replace("%profile%", target.getUniqueId().toString()));
+            return;
+        }
+
+        if(!StringUtils.isNumeric(args[2])) {
+            commandSender.sendMessage(Configuration.NOT_NUMERIC_MESSAGE.replace("%arg%", args[2]));
+            return;
+        }
+
+        if(args[2].length() > 10) {
+            commandSender.sendMessage(Configuration.AMOUNT_INPUT_TOO_LONG_MESSAGE);
+            return;
+        }
+
+        long amount = Integer.valueOf(args[2]);
+
+        if(profile.getTokens() < amount) {
+            commandSender.sendMessage(Configuration.PLAYER_NOT_ENOUGH_TOKENS.replace("%player%", target.getName()).replace("%amount%", String.valueOf(amount)));
+            return;
+        }
+
+        profile.setTokens(profile.getTokens() - amount);
+
+        String amountString = Configuration.FORMAT_ENABLED ? Configuration.FORMAT_NUMBER_FORMAT.format(amount) : String.valueOf(amount);
+
+        commandSender.sendMessage(Configuration.TOOK_TOKENS_MESSAGE.replace("%amount%", amountString).replace("%player%", target.getName()));
+        target.sendMessage(Configuration.PLAYER_TOOK_TOKENS_MESSAGE.replace("%player%", commandSender.getName()).replace("%amount%", amountString));
+    }
+}

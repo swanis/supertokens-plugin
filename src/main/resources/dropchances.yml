@@ -1,0 +1,16 @@
+stone:
+  type: "STONE"
+  data: 0
+  chance: 0.25
+iron_block:
+  type: "IRON_BLOCK"
+  data: 0
+  chance: 0.5
+gold_block:
+  type: "GOLD_BLOCK"
+  data: 0
+  chance: 1
+diamond_block:
+ type: "DIAMOND_BLOCK"
+ data: 0
+ chance: 1.5

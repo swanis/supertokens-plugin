@@ -1,0 +1,10 @@
+main: is.swan.tokens.Tokens
+name: SuperTokens
+version: 1.1
+author: Swanis
+softdepend: [PlaceholderAPI, HolographicDisplays, CoreProtect]
+api-version: 1.13
+
+commands:
+  tokens:
+    aliases: [token, tokenshop]

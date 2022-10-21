@@ -1,0 +1,198 @@
+package is.swan.tokens.reward;
+
+import is.swan.tokens.Tokens;
+import is.swan.tokens.utils.ItemBuilder;
+import is.swan.tokens.utils.StringUtil;
+import is.swan.tokens.utils.YamlFile;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class RewardManager {
+
+    private Tokens instance;
+
+    private YamlFile rewardsFile;
+    private YamlFile lastRewardsFile;
+    private List<Reward> rewards = new ArrayList<>();
+    private Map<Integer, Reward> currentRewards = new HashMap<>();
+
+    public RewardManager(Tokens instance) {
+        this.instance = instance;
+
+        rewardsFile = new YamlFile("rewards", instance);
+        lastRewardsFile = new YamlFile("lastrewards", instance);
+        loadRewards();
+    }
+
+    private void loadRewards() {
+        FileConfiguration config = rewardsFile.getConfig();
+
+        config.getKeys(false).forEach(string -> {
+            String name = StringUtil.color(config.getString(string + ".name"));
+            List<String> commands = config.getStringList(string + ".commands");
+            int price = config.getInt(string + ".price");
+
+            Material material = null;
+
+            try {
+                material = Material.valueOf(config.getString(string + ".material"));
+            } catch (IllegalArgumentException e) {
+                try {
+                    material = Material.valueOf("LEGACY_" + config.getString(string + ".material"));
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            int amount =  config.getInt(string + ".amount");
+            List<String> lore = new ArrayList<>();
+            config.getStringList(string + ".lore").forEach(line -> lore.add(StringUtil.color(line)));
+            short durability = (short) config.getInt(string + ".durability");
+            boolean glow = config.getBoolean(string + ".glow");
+            boolean special = config.getBoolean(string + ".special");
+            int slot = config.getInt(string + ".slot");
+
+            Reward reward = new Reward(string, name, commands, price, material, amount, lore, durability, glow, special, slot);
+            rewards.add(reward);
+        });
+    }
+
+    public void saveLastRewards() {
+        FileConfiguration config = lastRewardsFile.getConfig();
+
+        config.set("normaltime", instance.getNormalTime());
+        config.set("specialtime", instance.getSpecialTime());
+        config.set("rewards", currentRewards.values().stream().map(r -> r.getConfigKey()).collect(Collectors.toList()));
+
+        lastRewardsFile.save();
+    }
+
+    public void loadLastRewards() {
+        FileConfiguration config = lastRewardsFile.getConfig();
+
+        if(config.getKeys(false).size() == 0) return;
+
+        instance.setNormalTime(config.getLong("normaltime"));
+        instance.setSpecialTime(config.getLong("specialtime"));
+        instance.setLoaded(true);
+
+        config.getStringList("rewards").forEach(string -> {
+            Reward reward = getReward(string);
+
+            if(reward == null) return;
+
+            currentRewards.put(reward.getSlot(), reward);
+
+            List<String> lore = new ArrayList<>();
+            reward.getLore().forEach(line -> lore.add(line.replace("%price%", String.valueOf(reward.getPrice()))));
+
+            ItemStack rewardItem = new ItemBuilder(reward.getMaterial())
+                    .setName(reward.getName())
+                    .setAmount(reward.getAmount())
+                    .setLore(lore)
+                    .setDurability(reward.getDurability())
+                    .addGlow(reward.isGlow())
+                    .toItemStack();
+
+            instance.getInventory().setItem(reward.getSlot(), rewardItem);
+        });
+    }
+
+    public void refreshNormalRewards() {
+        Random random = new Random();
+        Set<Integer> usedSlots = new HashSet<>();
+
+        rewards.forEach(reward -> {
+            if(usedSlots.contains(reward.getSlot())) return;
+
+            usedSlots.add(reward.getSlot());
+        });
+
+        usedSlots.forEach(integer -> {
+            List<Reward> rewardList = rewards.stream().filter(reward -> !reward.isSpecial()).filter(reward -> reward.getSlot() == integer).collect(Collectors.toList());
+
+            if(rewardList.isEmpty()) return;
+
+            int r = random.nextInt(rewardList.size());
+            Reward reward = rewardList.get(r);
+
+            currentRewards.put(reward.getSlot(), reward);
+
+            int price = reward.getPrice();
+            List<String> lore = new ArrayList<>();
+            reward.getLore().forEach(string -> lore.add(string.replace("%price%", String.valueOf(price))));
+
+            ItemStack rewardItem = new ItemBuilder(reward.getMaterial())
+                    .setName(reward.getName())
+                    .setAmount(reward.getAmount())
+                    .setLore(lore)
+                    .setDurability(reward.getDurability())
+                    .addGlow(reward.isGlow())
+                    .toItemStack();
+
+            instance.getInventory().setItem(reward.getSlot(), rewardItem);
+        });
+    }
+
+    public void refreshSpecialRewards() {
+        Random random = new Random();
+        Set<Integer> usedSlots = new HashSet<>();
+
+        rewards.forEach(reward -> {
+            if(usedSlots.contains(reward.getSlot())) return;
+
+            usedSlots.add(reward.getSlot());
+        });
+
+        usedSlots.forEach(integer -> {
+            List<Reward> rewardList = rewards.stream().filter(reward -> reward.isSpecial()).filter(reward -> reward.getSlot() == integer).collect(Collectors.toList());
+
+            if(rewardList.isEmpty()) return;
+
+            int r = random.nextInt(rewardList.size());
+            Reward reward = rewardList.get(r);
+
+            currentRewards.put(reward.getSlot(), reward);
+
+            int price = reward.getPrice();
+            List<String> lore = new ArrayList<>();
+            reward.getLore().forEach(string -> lore.add(string.replace("%price%", String.valueOf(price))));
+
+            ItemStack rewardItem = new ItemBuilder(reward.getMaterial())
+                    .setName(reward.getName())
+                    .setAmount(reward.getAmount())
+                    .setLore(lore)
+                    .setDurability(reward.getDurability())
+                    .addGlow(reward.isGlow())
+                    .toItemStack();
+
+            instance.getInventory().setItem(reward.getSlot(), rewardItem);
+        });
+    }
+
+    public void reloadRewards() {
+        saveLastRewards();
+        rewards.clear();
+        currentRewards.clear();
+        rewardsFile = new YamlFile("rewards", instance);
+        lastRewardsFile = new YamlFile("lastrewards", instance);
+        loadRewards();
+        loadLastRewards();
+    }
+
+    public Reward getReward(String configKey) {
+        return rewards.stream().filter(reward -> reward.getConfigKey().equals(configKey)).findFirst().orElse(null);
+    }
+
+    public List<Reward> getRewards() {
+        return rewards;
+    }
+
+    public Map<Integer, Reward> getCurrentRewards() {
+        return currentRewards;
+    }
+}

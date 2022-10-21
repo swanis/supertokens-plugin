@@ -1,0 +1,68 @@
+package is.swan.tokens.command.subcommands;
+
+import is.swan.tokens.Configuration;
+import is.swan.tokens.Tokens;
+import is.swan.tokens.profile.Profile;
+import is.swan.tokens.utils.ItemBuilder;
+import is.swan.tokens.utils.command.Command;
+import is.swan.tokens.utils.command.PluginCommand;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class TokensGiveItemCommand extends PluginCommand {
+
+    private Tokens instance;
+
+    public TokensGiveItemCommand(Tokens instance) {
+        super(instance);
+        this.instance = instance;
+    }
+
+    @Command(command = "giveitem", permission = "tokens.giveitem", subCommand = true, baseCommand = "tokens")
+    public void onCommand(CommandSender commandSender, String[] args) {
+        if(args.length < 3) {
+            commandSender.sendMessage(Configuration.USAGE_MESSAGE.replace("%usage%", "/tokens giveitem <player> <amount>"));
+            return;
+        }
+
+        if(instance.getServer().getPlayerExact(args[1]) == null) {
+            commandSender.sendMessage(Configuration.PLAYER_NOT_FOUND_MESSAGE.replace("%player%", args[1]));
+            return;
+        }
+
+        Player target = instance.getServer().getPlayerExact(args[1]);
+        Profile profile = instance.getProfileManager().getProfile(target.getUniqueId());
+
+        if(profile == null) {
+            commandSender.sendMessage(Configuration.PROFILE_NOT_FOUND_MESSAGE.replace("%profile%", target.getUniqueId().toString()));
+            return;
+        }
+
+        if(!StringUtils.isNumeric(args[2])) {
+            commandSender.sendMessage(Configuration.NOT_NUMERIC_MESSAGE.replace("%arg%", args[2]));
+            return;
+        }
+
+        if(args[2].length() > 10) {
+            commandSender.sendMessage(Configuration.AMOUNT_INPUT_TOO_LONG_MESSAGE);
+            return;
+        }
+
+        int amount = Integer.valueOf(args[2]);
+
+        ItemStack mobCoinItem = new ItemBuilder(Configuration.TOKEN_ITEM_MATERIAL)
+                .setName(Configuration.TOKEN_ITEM_NAME)
+                .setLore(Configuration.TOKEN_ITEM_LORE)
+                .setAmount(amount)
+                .toItemStack();
+
+        target.getInventory().addItem(mobCoinItem);
+
+        String amountString = Configuration.FORMAT_ENABLED ? Configuration.FORMAT_NUMBER_FORMAT.format(amount) : String.valueOf(amount);
+
+        commandSender.sendMessage(Configuration.GAVE_TOKEN_ITEMS_MESSAGE.replace("%amount%", amountString).replace("%player%", target.getName()));
+        target.sendMessage(Configuration.RECEIVED_TOKEN_ITEMS_MESSAGE.replace("%amount%", amountString).replace("%sender%", commandSender.getName()));
+    }
+}

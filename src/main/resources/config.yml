@@ -1,0 +1,141 @@
+mysql:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "test"
+  user: "root"
+  password: ""
+
+gui:
+  title: "&8&lTOKENS"
+  rows: 4
+  decoration:
+    tokens_item:
+      material: "WATCH"
+      name: "&b&lTOKEN ITEMS"
+      lore:
+        - ""
+        - "&2&l* &aTime Remaining&f: &7%normaltime%"
+        - ""
+        - "&7&o(( These items will automatically update to new items... ))"
+      durability: 0
+      glow: false
+      slot: 5
+    special_tokens_item:
+      material: "WATCH"
+      name: "&3&lSPECIAL TOKEN ITEMS"
+      lore:
+        - ""
+        - "&2&l* &aTime Remaining&f: &7%specialtime%"
+        - ""
+        - "&7&o(( These items will automatically update to new items... ))"
+      durability: 0
+      glow: false
+      slot: 2
+    amount_item:
+      material: "NETHER_STAR"
+      name: "&3You currently have &b%coins% &3tokens"
+      lore: []
+      durability: 0
+      glow: false
+      slot: 27
+    info_item:
+      material: "BOOK"
+      name: " "
+      lore:
+        - "&7&m-------------------------------------"
+        - "&bTokens &7can be earned by mining specific blocks."
+        - "&bTokens &7will allow you to buy items from the shop menu."
+        - "&7Use &b/Tokens Help&7 for more!"
+        - " "
+        - "&3&lBlocks that will reward you tokens:"
+        - "&bStone (0.25% chance)"
+        - "&bIron Block (0.5% chance)"
+        - "&bGold Block (1% chance)"
+        - "&bDiamond Block (1.5% chance)"
+        - "&7&m-------------------------------------"
+        - " "
+      durability: 0
+      glow: false
+      slot: 35
+  filler:
+    enabled: true
+    item:
+      material: "STAINED_GLASS_PANE"
+      name: " "
+      durability: 15
+      glow: false
+gui_open:
+  sound:
+    enabled: true
+    type: "ENDERDRAGON_HIT"
+token_item:
+  material: "NETHER_STAR"
+  name: "&b&lToken &7(Rightclick to redeem)"
+  lore:
+    - "&3You can use these tokens in &b/tokens"
+    - "&3to purchase stuff"
+format:
+  enabled: false
+  locale: "US"
+token_normal_shop_update_hours: 24
+token_special_shop_update_hours: 72
+token_receive_message_interval_seconds: 60
+tokens_only_from_naturally_spawned_mods: false
+received_token_from_block_message_sent: true
+close_gui_on_buy: true
+stacking_support: false
+disabled_worlds:
+  - "disabledworld"
+coreprotect_prevent_tokens_from_placed_blocks: false
+
+NO_PERMISSION_MESSAGE: "&cYou do not have permission to execute this command"
+USAGE_MESSAGE: "&cUsage: %usage%"
+PLAYER_NOT_FOUND_MESSAGE: "&cCannot find the player %player%"
+PROFILE_NOT_FOUND_MESSAGE: "&cCannot find the profile %profile%"
+NOT_NUMERIC_MESSAGE: "&c%arg% should only contain numbers"
+GAVE_TOKENS_MESSAGE: "&eYou gave &6%amount% &etokens to &6%player%"
+RECEIVED_TOKENS_MESSAGE: "&eYou received &6%amount% &etokens from &6%sender%"
+GAVE_TOKEN_ITEMS_MESSAGE: "&eYou gave &6%amount% &etoken items to &6%player%"
+RECEIVED_TOKEN_ITEMS_MESSAGE: "&eYou received &6%amount% &etoken items from &6%sender%"
+NOT_PLAYER_MESSAGE: "&cYou need to be a player to execute this command"
+AMOUNT_CANT_BE_ZERO_MESSAGE: "&cThe withdrawal amount cannot be 0"
+NOT_ENOUGH_TOKENS_MESSAGE: "&cYou do not have enough tokens to do that"
+WITHDREW_TOKENS_MESSAGE: "&eYou withdrew &6%amount% &etokens"
+BOUGHT_REWARD_MESSAGE: "&eYou bought %reward% &efor &6%amount% &etokens"
+RECEIVED_TOKEN_FROM_BLOCK_MESSAGE: "&eYou earned &6%amount% &etokens from mining the last minute"
+REDEEMED_TOKENS_MESSAGE: "&eYou redeemed &6%amount% &etokens"
+TOKEN_NORMAL_SHOP_UPDATED_MESSAGE: "&e(&6&l!&e) The normal token items in &6/tokens &ehas been updated"
+TOKEN_SPECIAL_SHOP_UPDATED_MESSAGE: "&e(&6&l!&e) The special token items in &6/tokens &ehas been updated"
+TOKENS_OF_PLAYER_MESSAGE: "&6%player% &ehas &6%amount% &etokens"
+PLAYER_NOT_ENOUGH_TOKENS: "&c%player% does not have %amount% tokens"
+TOOK_TOKENS_MESSAGE: "&eYou took &6%amount% &etokens from &6%player%"
+PLAYER_TOOK_TOKENS_MESSAGE: "&6%player% &etook &6%amount% &etokens from your balance"
+SET_TOKENS_MESSAGE: "&6%player%&e's tokens balance has been set to &6%amount%"
+YOUR_TOKENS_SET_MESSAGE: "&eYour tokens balance has been set to &6%amount% &eby &6%player%"
+INVENTORY_FULL_MESSAGE: "&cYour inventory is full"
+INVENTORY_GOT_FILLED_MESSAGE: "&eYour inventory got filled so you could only withdraw &6%amount% &etokens"
+AMOUNT_INPUT_TOO_LONG_MESSAGE: "&cThat amount input is too long"
+CANNOT_PAY_YOURSELF_MESSAGE: "&cYou cannot pay yourself"
+TOKENS_HELP_LORE:
+  - '&8&m---------------------------'
+  - '&3&l(!) Tokens Commands:'
+  - '&b/tokens withdraw <amount>'
+  - '&b/tokens balance <player>'
+  - '&b/tokens pay <player> <amount>'
+  - '&8&m---------------------------'
+TOKENS_HELP_ADMIN_LORE:
+  - '&8&m---------------------------'
+  - '&3&l(!) Tokens Commands:'
+  - '&b/tokens withdraw <amount>'
+  - '&b/tokens balance <player>'
+  - '&b/tokens pay <player> <amount>'
+  - ''
+  - '&3&l(!) Admin Commands:'
+  - '&b/tokens give <player> <amount>'
+  - '&b/tokens take <player> <amount>'
+  - '&b/tokens set <player> <amount>'
+  - '&b/tokens giveitem <player> <amount>'
+  - '&b/tokens refresh <category>'
+  - '&b/tokens reload'
+  - '&8&m---------------------------'
