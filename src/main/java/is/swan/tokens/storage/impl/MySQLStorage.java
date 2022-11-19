@@ -70,7 +70,6 @@ public class MySQLStorage implements Storable {
         Profile profile = instance.getProfileManager().getProfile(uuid);
 
         if (profile == null) return;
-        if (profile.getTokens() == 0) return;
 
         String sql = "REPLACE supertokens(uuid, tokens) VALUES (?, ?);";
 

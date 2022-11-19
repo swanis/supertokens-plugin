@@ -7,12 +7,15 @@ import org.bukkit.command.CommandSender;
 
 public class TokensAuthorCommand extends PluginCommand {
 
+    private Tokens instance;
+
     public TokensAuthorCommand(Tokens instance) {
         super(instance);
+        this.instance = instance;
     }
 
     @Command(command = "author", subCommand = true, baseCommand = "tokens")
     public void onCommand(CommandSender commandSender, String[] args) {
-        commandSender.sendMessage("This server is running SuperTokens v1.1 created by Swanis ( https://www.mc-market.org/members/71127/ )");
+        commandSender.sendMessage("This server is running SuperTokens v" + instance.getDescription().getVersion() + " created by Swanis ( https://www.mc-market.org/members/71127/ )");
     }
 }

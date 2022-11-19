@@ -1,7 +1,9 @@
 package is.swan.tokens.placeholder;
 
+import is.swan.tokens.Configuration;
 import is.swan.tokens.Tokens;
 import is.swan.tokens.profile.Profile;
+import is.swan.tokens.utils.FormatUtil;
 import is.swan.tokens.utils.TimeUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -41,15 +43,23 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String params) {
-        if(player == null) return null;
+        if (player == null) return null;
 
         switch(params) {
             case "tokens": {
                 Profile profile = instance.getProfileManager().getProfile(player);
 
-                if(profile == null) return null;
+                if (profile == null) return null;
 
-                return String.valueOf(profile.getTokens());
+                return Configuration.FORMAT_ENABLED ? Configuration.FORMAT_NUMBER_FORMAT.format(profile.getTokens()) : String.valueOf(profile.getTokens());
+            }
+
+            case "tokens_formatted": {
+                Profile profile = instance.getProfileManager().getProfile(player);
+
+                if (profile == null) return null;
+
+                return FormatUtil.format(profile.getTokens());
             }
 
             case "normal_time": {
