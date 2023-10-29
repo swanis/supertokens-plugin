@@ -67,7 +67,7 @@ public class TokensPayCommand extends PluginCommand {
             return;
         }
 
-        int amount = Integer.valueOf(args[2]);
+        long amount = Long.valueOf(args[2]);
 
         if (profile.getTokens() < amount) {
             player.sendMessage(Configuration.NOT_ENOUGH_TOKENS_MESSAGE);

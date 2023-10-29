@@ -48,7 +48,7 @@ public class TokensTakeCommand extends PluginCommand {
             return;
         }
 
-        long amount = Integer.valueOf(args[2]);
+        long amount = Long.valueOf(args[2]);
 
         if(profile.getTokens() < amount) {
             commandSender.sendMessage(Configuration.PLAYER_NOT_ENOUGH_TOKENS.replace("%player%", target.getName()).replace("%amount%", String.valueOf(amount)));

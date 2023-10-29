@@ -27,16 +27,14 @@ public class PlayerListener implements Listener {
         instance.getStorage().loadProfile(player.getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerKick(PlayerKickEvent event) {
-        if(event.isCancelled()) return;
-
         Player player = event.getPlayer();
 
         instance.getStorage().saveProfile(player.getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 

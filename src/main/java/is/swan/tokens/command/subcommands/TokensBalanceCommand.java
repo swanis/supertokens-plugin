@@ -37,11 +37,6 @@ public class TokensBalanceCommand extends PluginCommand {
             return;
         }
 
-        if(String.valueOf(profile.getTokens()).length() > 10) {
-            commandSender.sendMessage(Configuration.AMOUNT_INPUT_TOO_LONG_MESSAGE);
-            return;
-        }
-
         String amount = Configuration.FORMAT_ENABLED ? Configuration.FORMAT_NUMBER_FORMAT.format(profile.getTokens()) : String.valueOf(profile.getTokens());
 
         commandSender.sendMessage(Configuration.TOKENS_OF_PLAYER_MESSAGE.replace("%player%", player.getName()).replace("%amount%", amount));

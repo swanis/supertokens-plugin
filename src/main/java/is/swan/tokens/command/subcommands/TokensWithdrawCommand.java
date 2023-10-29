@@ -39,7 +39,7 @@ public class TokensWithdrawCommand extends PluginCommand {
             return;
         }
 
-        if(args[1].length() > 10) {
+        if(args[1].length() > 9) {
             commandSender.sendMessage(Configuration.AMOUNT_INPUT_TOO_LONG_MESSAGE);
             return;
         }

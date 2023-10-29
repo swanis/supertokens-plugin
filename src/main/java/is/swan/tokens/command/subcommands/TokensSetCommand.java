@@ -48,7 +48,7 @@ public class TokensSetCommand extends PluginCommand {
             return;
         }
 
-        long amount = Integer.valueOf(args[2]);
+        long amount = Long.valueOf(args[2]);
 
         profile.setTokens(amount);
 

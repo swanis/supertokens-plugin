@@ -38,7 +38,7 @@ public class YamlStorage implements Storable {
             return;
         }
 
-        int tokens = config.getInt(prefix + ".tokens");
+        long tokens = config.getLong(prefix + ".tokens");
 
         profile.setTokens(tokens);
 

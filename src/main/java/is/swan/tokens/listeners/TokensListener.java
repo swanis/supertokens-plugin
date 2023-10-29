@@ -26,6 +26,8 @@ public class TokensListener implements Listener {
         Profile profile = event.getProfile();
         Player player = profile.getPlayer();
 
+        if (player == null) return;
+
         if(String.valueOf(event.getAmount()).length() > 10) {
             player.sendMessage(Configuration.AMOUNT_INPUT_TOO_LONG_MESSAGE);
             return;

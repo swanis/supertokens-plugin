@@ -5,7 +5,6 @@ import is.swan.tokens.Tokens;
 import is.swan.tokens.chance.DropChance;
 import is.swan.tokens.events.TokensReceiveEvent;
 import is.swan.tokens.profile.Profile;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,8 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-
-import java.util.Random;
 
 public class BlockListener implements Listener {
 
@@ -41,6 +38,9 @@ public class BlockListener implements Listener {
         if (Math.random() * 100 > dropChance.getChance()) return;
 
         Profile profile = instance.getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null) return;
+
         TokensReceiveEvent tokensReceiveEvent = new TokensReceiveEvent(profile, 1);
 
         instance.getServer().getPluginManager().callEvent(tokensReceiveEvent);
